@@ -9,7 +9,7 @@ const pool = new Pool({
   user: 'pgadmin@mypgserver',
   host: 'mypgserver.postgres.database.azure.com',
   database: 'hostelmealDB',
-  password: 'gopi90',
+  password: '#Gatt2005#',
   port: 5432,
 });
 
