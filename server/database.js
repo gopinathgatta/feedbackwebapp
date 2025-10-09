@@ -6,8 +6,8 @@ dotenv.config();
 
 // Create a connection pool to the PostgreSQL database
 const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
+  user: 'pgadmin@mypgserver',
+  host: 'mypgserver.postgres.database.azure.com',
   database: 'hostelmealDB',
   password: 'gopi90',
   port: 5432,
