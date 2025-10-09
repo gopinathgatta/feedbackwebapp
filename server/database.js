@@ -11,6 +11,7 @@ const pool = new Pool({
   database: 'hostelmealDB',
   password: '#Gatt2005#',
   port: 5432,
+  ssl: { rejectUnauthorized: false }
 });
 
 // Test the database connection asynchronously
