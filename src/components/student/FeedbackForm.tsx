@@ -20,7 +20,8 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({ user, studentData })
   const [loadingMeals, setLoadingMeals] = useState(true);
   const [mealsError, setMealsError] = useState<string | null>(null);
 
-  const BACKEND_URL = 'https://feedbackwebapp-bwf6gudtacbsd6h9.centralindia-01.azurewebsites.net/'; // ✅ single base route
+const BACKEND_URL = import.meta.env.VITE_API_BASE_URL + '/feedback';
+
 
   // ✅ Auto-select first meal if available
   useEffect(() => {
