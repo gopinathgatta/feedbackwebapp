@@ -15,8 +15,8 @@ const removeAuthToken = () => {
   localStorage.removeItem('authToken');
 };
 
-// API request helper
-const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
+// API request helper with retry mechanism
+const apiRequest = async (endpoint: string, options: RequestInit = {}, retries = 2) => {
   const token = getAuthToken();
   
   const config: RequestInit = {
@@ -28,18 +28,31 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
     ...options,
   };
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-  
-  if (!response.ok) {
-    try {
-      const error = await response.json();
-      throw new Error(error.error || 'API request failed');
-    } catch (e) {
-      throw new Error('Network error or server not responding');
+  try {
+    console.log(`Attempting to fetch: ${API_BASE_URL}${endpoint}`);
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    
+    if (!response.ok) {
+      try {
+        const error = await response.json();
+        throw new Error(error.error || `API request failed with status: ${response.status}`);
+      } catch (parseError) {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      }
     }
-  }
 
-  return response.json();
+    return response.json();
+  } catch (error) {
+    if (retries > 0) {
+      console.log(`Retrying request to ${endpoint}, ${retries} attempts left`);
+      // Wait for 1 second before retrying
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return apiRequest(endpoint, options, retries - 1);
+    }
+    
+    console.error('API request failed:', error);
+    throw new Error(`Network error or server not responding. Please check if the server is running at ${API_BASE_URL}`);
+  }
 };
 
 // Auth API
