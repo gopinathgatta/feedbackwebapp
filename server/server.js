@@ -16,8 +16,10 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// Use Azure PORT or fallback
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001;
 
+// Middleware
 app.use(cors({
   origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173',
   credentials: true,
@@ -25,14 +27,17 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/meals', mealRoutes);
 app.use('/api/feedback', feedbackRoutes);
 
+// API Status Route
 app.get('/api/status', (req, res) => {
   res.json({ status: 'success', message: 'API is running' });
 });
 
+// Database Test Route
 app.get('/api/db-test', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
@@ -43,19 +48,20 @@ app.get('/api/db-test', async (req, res) => {
   }
 });
 
+// API Error Handler
 app.use('/api', (err, req, res, next) => {
   console.error('API Error:', err.stack);
-  res.status(500).json({ error: 'Something went wrong with the API!' });
+  res.status(500).json({ error: 'Something went wrong with the API!', message: err.message });
 });
 
 // Serve React build files
-app.use(express.static(path.join(__dirname, '../dist')));
+const reactBuildPath = path.join(__dirname, '../dist');
+app.use(express.static(reactBuildPath));
 
-// ✅ React client-side routing fallback (safe for Node 22)
+// React Router Fallback
 app.use((req, res, next) => {
   if (req.path.startsWith('/api')) return next();
-
-  const indexPath = path.resolve(__dirname, '../dist/index.html');
+  const indexPath = path.resolve(reactBuildPath, 'index.html');
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
@@ -63,18 +69,18 @@ app.use((req, res, next) => {
   }
 });
 
-// General error handler
+// General Error Handler
 app.use((err, req, res, next) => {
   console.error('General Error:', err.stack);
-
   if (req.path.startsWith('/api')) {
     res.setHeader('Content-Type', 'application/json');
     return res.status(500).json({ error: 'Something went wrong!', message: err.message });
   }
-
-  res.status(500).sendFile(path.resolve(__dirname, '../dist/index.html'));
+  const indexPath = path.resolve(reactBuildPath, 'index.html');
+  res.status(500).sendFile(indexPath);
 });
 
+// Start server
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Server running and listening on port ${PORT}`);
 });
