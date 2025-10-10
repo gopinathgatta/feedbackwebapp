@@ -19,7 +19,7 @@ export const AdminOverview: React.FC = () => {
     // Fetch feedback data from the database
     const fetchFeedbacks = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/feedback/with-meals', {
+        const response = await fetch('/api/feedback/with-meals', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
           }
