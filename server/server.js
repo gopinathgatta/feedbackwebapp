@@ -22,7 +22,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001;
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN, // now strictly using deployed frontend URL
+  origin: process.env.CLIENT_ORIGIN || true, // Allow any origin in development
   credentials: true,
   exposedHeaders: ['Content-Type']
 }));
@@ -87,3 +87,4 @@ app.listen(PORT, '0.0.0.0', () => {
 });
 
 export default app;
+
