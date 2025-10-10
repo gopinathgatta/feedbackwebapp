@@ -22,7 +22,7 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001;
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || true, // Allow any origin in development
+  origin: process.env.CLIENT_ORIGIN || '*', // Allow any origin in development
   credentials: true,
   exposedHeaders: ['Content-Type']
 }));
