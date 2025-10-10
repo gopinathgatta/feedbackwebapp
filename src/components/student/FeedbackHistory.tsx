@@ -18,7 +18,7 @@ interface FeedbackWithMeal {
 }
 
 // API URL for feedback
-const FEEDBACK_API_URL = 'http://localhost:3001/api/feedback';
+const FEEDBACK_API_URL = '/api/feedback';
 
 export const FeedbackHistory: React.FC<FeedbackHistoryProps> = ({ user, studentData }) => {
   const [feedbacks, setFeedbacks] = useState<FeedbackWithMeal[]>([]);
