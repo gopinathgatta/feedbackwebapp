@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Send, Star } from 'lucide-react';
 import { User, Student, Meal } from '../../types/user';
@@ -19,7 +20,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({ user, studentData })
   const [loadingMeals, setLoadingMeals] = useState(true);
   const [mealsError, setMealsError] = useState<string | null>(null);
 
-  const BACKEND_URL = 'http://localhost:3001/api/feedback'; // ✅ single base route
+  const BACKEND_URL = '/api/feedback'; // ✅ single base route
 
   // ✅ Auto-select first meal if available
   useEffect(() => {
