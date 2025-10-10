@@ -31,8 +31,12 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
   
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || 'API request failed');
+    try {
+      const error = await response.json();
+      throw new Error(error.error || 'API request failed');
+    } catch (e) {
+      throw new Error('Network error or server not responding');
+    }
   }
 
   return response.json();
